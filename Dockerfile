@@ -1,15 +1,17 @@
-FROM ubuntu:16.04
-MAINTAINER Peterko <peter.turza@gmail.com>
+FROM ubuntu:17.04
+MAINTAINER Peter Turza <peter.turza@gmail.com>
 
-ENV VERSION_SDK_TOOLS "25.2.3"
+ENV VERSION_SDK_TOOLS "3859397"
 ENV VERSION_BUILD_TOOLS "25.0.3"
 ENV VERSION_TARGET_SDK "25"
 
-ENV SDK_PACKAGES "build-tools-${VERSION_BUILD_TOOLS},android-${VERSION_TARGET_SDK},addon-google_apis-google-${VERSION_TARGET_SDK},platform-tools,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository"
-
 ENV ANDROID_HOME "/sdk"
-ENV PATH "$PATH:${ANDROID_HOME}/tools"
+ENV VERSION_ANDROID_NDK "android-ndk-r15"
+ENV ANDROID_NDK_HOME "/sdk/${VERSION_ANDROID_NDK}"
+
+ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools"
 ENV DEBIAN_FRONTEND noninteractive
+
 
 RUN apt-get -qq update && \
     apt-get install -qqy --no-install-recommends \
@@ -29,29 +31,31 @@ RUN apt-get -qq update && \
       build-essential \
       file \
       ssh \
+      libqt5widgets5 \
+      libqt5svg5 \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-RUN curl -s http://dl.google.com/android/repository/tools_r${VERSION_SDK_TOOLS}-linux.zip > /tools.zip && \
-    unzip /tools.zip -d /sdk && \
+ADD https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip /tools.zip
+RUN unzip /tools.zip -d /sdk && \
     rm -v /tools.zip
 
 RUN mkdir -p $ANDROID_HOME/licenses/ \
   && echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license \
   && echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
-RUN (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/android update sdk -u -a -t ${SDK_PACKAGES}
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager "tools" "platforms;android-${VERSION_TARGET_SDK}" "build-tools;${VERSION_BUILD_TOOLS}"
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager "emulator" "system-images;android-${VERSION_TARGET_SDK};google_apis;armeabi-v7a"
 
-ENV VERSION_ANDROID_NDK "android-ndk-r14"
+RUN echo no | ${ANDROID_HOME}/tools/bin/avdmanager create avd -f --name test --abi google_apis/armeabi-v7a --package "system-images;android-${VERSION_TARGET_SDK};google_apis;armeabi-v7a"
 
-ENV ANDROID_NDK_HOME "/sdk/${VERSION_ANDROID_NDK}"
+RUN gem install fastlane
 
 ADD https://dl.google.com/android/repository/${VERSION_ANDROID_NDK}-linux-x86_64.zip /ndk.zip
 RUN unzip /ndk.zip -d /sdk && \
     rm -v /ndk.zip
 
-RUN gem install fastlane
-
-RUN /sdk/tools/bin/sdkmanager "cmake;3.6.3155560"
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager "cmake;3.6.3155560"
