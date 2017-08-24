@@ -11,8 +11,9 @@ ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/
 ENV DEBIAN_FRONTEND noninteractive
 
 
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
     bash \
+    perl \
     curl \
     unzip \
     zip \
