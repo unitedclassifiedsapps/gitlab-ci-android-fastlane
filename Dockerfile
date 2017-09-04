@@ -39,3 +39,5 @@ RUN ${ANDROID_HOME}/tools/bin/sdkmanager "tools" "platforms;android-${VERSION_TA
 RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
 
 RUN gem install fastlane
+
+RUN ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -q -N ""
