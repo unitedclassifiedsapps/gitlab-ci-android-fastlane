@@ -41,3 +41,4 @@ RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;g
 RUN gem install fastlane
 
 RUN ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -q -N ""
+RUN adb keygen ~/.android/adbkey
