@@ -1,5 +1,5 @@
 FROM anapsix/alpine-java:8_jdk
-MAINTAINER Peter Turza <peter.turza@gmail.com>
+MAINTAINER United Classifieds <unitedclassifiedsapps@gmail.com>
 
 ENV VERSION_SDK_TOOLS "3859397"
 ENV VERSION_BUILD_TOOLS "26.0.1"
