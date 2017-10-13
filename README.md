@@ -4,7 +4,7 @@ This Docker image contains the Android SDK and most common packages necessary fo
 Use generated public key as gitlab deploy key
 
 ```
-docker run -it --rm peterturza/gitlab-ci-android-fastlane
+docker run -it --rm unitedclassifiedsapps/gitlab-ci-android-fastlane
 cat ~/.ssh/id_rsa
 ```
 
