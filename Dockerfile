@@ -1,8 +1,12 @@
 FROM anapsix/alpine-java:8_jdk
 LABEL maintainer="United Classifieds <unitedclassifiedsapps@gmail.com>"
 
+ENV LC_ALL "en_US.UTF-8"
+ENV LANGUAGE "en_US.UTF-8"
+ENV LANG "en_US.UTF-8"
+
 ENV VERSION_SDK_TOOLS "3859397"
-ENV VERSION_BUILD_TOOLS "26.0.2"
+ENV VERSION_BUILD_TOOLS "26.0.3"
 ENV VERSION_TARGET_SDK "26"
 
 ENV ANDROID_HOME "/sdk"
