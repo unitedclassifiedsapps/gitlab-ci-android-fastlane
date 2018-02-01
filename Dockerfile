@@ -1,13 +1,15 @@
-FROM anapsix/alpine-java:8_jdk
+FROM phusion/baseimage:0.10.0
 LABEL maintainer="United Classifieds <unitedclassifiedsapps@gmail.com>"
+
+CMD ["/sbin/my_init"]
 
 ENV LC_ALL "en_US.UTF-8"
 ENV LANGUAGE "en_US.UTF-8"
 ENV LANG "en_US.UTF-8"
 
 ENV VERSION_SDK_TOOLS "3859397"
-ENV VERSION_BUILD_TOOLS "26.0.3"
-ENV VERSION_TARGET_SDK "26"
+ENV VERSION_BUILD_TOOLS "27.0.3"
+ENV VERSION_TARGET_SDK "27"
 
 ENV ANDROID_HOME "/sdk"
 
@@ -16,25 +18,22 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV HOME "/root"
 
-RUN apk update && apk add --no-cache \
-    bash \
-    perl \
+RUN apt-add-repository ppa:brightbox/ruby-ng
+RUN apt-get update
+RUN apt-get -y install --no-install-recommends \
     curl \
+    openjdk-8-jdk \
     unzip \
     zip \
     git \
-    ruby \
-    ruby-dev \
-    ruby-rdoc \
-    ruby-irb \
-    openssh \
-    g++ \
-    make \
-    && rm -rf /tmp/* /var/tmp/*
+    ruby2.4 \
+    ruby2.4-dev \
+    build-essential \
+    file \
+    ssh
 
 ADD https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip /tools.zip
-RUN unzip /tools.zip -d /sdk && \
-    rm -v /tools.zip
+RUN unzip /tools.zip -d /sdk && rm -rf /tools.zip
 
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
 
@@ -48,3 +47,5 @@ ADD id_rsa $HOME/.ssh/id_rsa
 ADD id_rsa.pub $HOME/.ssh/id_rsa.pub
 ADD adbkey $HOME/.android/adbkey
 ADD adbkey.pub $HOME/.android/adbkey.pub
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
