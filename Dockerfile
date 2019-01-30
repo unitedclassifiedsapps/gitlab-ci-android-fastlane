@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.10.0
+FROM phusion/baseimage:0.11
 LABEL maintainer="United Classifieds <unitedclassifiedsapps@gmail.com>"
 
 CMD ["/sbin/my_init"]
@@ -8,8 +8,8 @@ ENV LANGUAGE "en_US.UTF-8"
 ENV LANG "en_US.UTF-8"
 
 ENV VERSION_SDK_TOOLS "4333796"
-ENV VERSION_BUILD_TOOLS "27.0.3"
-ENV VERSION_TARGET_SDK "27"
+ENV VERSION_BUILD_TOOLS "28.0.3"
+ENV VERSION_TARGET_SDK "28"
 
 ENV ANDROID_HOME "/sdk"
 
