@@ -11,9 +11,9 @@ ENV VERSION_SDK_TOOLS "6514223"
 ENV VERSION_BUILD_TOOLS "29.0.2"
 ENV VERSION_TARGET_SDK "29"
 
-ENV ANDROID_HOME "/sdk"
+ENV ANDROID_SDK_ROOT "/sdk"
 
-ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools"
+ENV PATH "$PATH:${ANDROID_SDK_ROOT}/cmdline-tools/tools:${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${ANDROID_SDK_ROOT}/platform-tools"
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV HOME "/root"
@@ -33,13 +33,13 @@ RUN apt-get -y install --no-install-recommends \
     ssh
 
 ADD https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}_latest.zip /tools.zip
-RUN unzip /tools.zip -d /sdk && rm -rf /tools.zip
+RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools" && unzip /tools.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools" && rm -rf /tools.zip
 
-RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
+RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin/sdkmanager --licenses
 
 RUN mkdir -p $HOME/.android && touch $HOME/.android/repositories.cfg
-RUN ${ANDROID_HOME}/tools/bin/sdkmanager "platform-tools" "tools" "platforms;android-${VERSION_TARGET_SDK}" "build-tools;${VERSION_BUILD_TOOLS}"
-RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
+RUN ${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin/sdkmanager "platform-tools" "tools" "platforms;android-${VERSION_TARGET_SDK}" "build-tools;${VERSION_BUILD_TOOLS}"
+RUN ${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
 
 RUN gem install fastlane
 
