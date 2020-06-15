@@ -1,5 +1,5 @@
-FROM phusion/baseimage:0.10.0
-LABEL maintainer="United Classifieds <unitedclassifiedsapps@gmail.com>"
+FROM phusion/baseimage:18.04-1.0.0
+LABEL maintainer="El Niño <info@elnino.tech>"
 
 CMD ["/sbin/my_init"]
 
@@ -7,9 +7,9 @@ ENV LC_ALL "en_US.UTF-8"
 ENV LANGUAGE "en_US.UTF-8"
 ENV LANG "en_US.UTF-8"
 
-ENV VERSION_SDK_TOOLS "4333796"
-ENV VERSION_BUILD_TOOLS "27.0.3"
-ENV VERSION_TARGET_SDK "27"
+ENV VERSION_SDK_TOOLS "6514223"
+ENV VERSION_BUILD_TOOLS "29.0.2"
+ENV VERSION_TARGET_SDK "29"
 
 ENV ANDROID_HOME "/sdk"
 
@@ -32,7 +32,7 @@ RUN apt-get -y install --no-install-recommends \
     file \
     ssh
 
-ADD https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip /tools.zip
+ADD https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}_latest.zip /tools.zip
 RUN unzip /tools.zip -d /sdk && rm -rf /tools.zip
 
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
