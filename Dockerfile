@@ -11,11 +11,10 @@ ENV VERSION_SDK_TOOLS "7302050_latest"
 ENV VERSION_BUILD_TOOLS "30.0.3"
 ENV VERSION_TARGET_SDK "30"
 
-ENV ANDROID_HOME "/sdk"
+ENV ANDROID_SDK_ROOT "/opt/android-sdk-linux"
+ENV PATH "${PATH}:${ANDROID_SDK_ROOT}/platform-tools:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin"
 
-ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools"
 ENV DEBIAN_FRONTEND noninteractive
-
 ENV HOME "/root"
 
 RUN apt-add-repository ppa:brightbox/ruby-ng
@@ -27,20 +26,34 @@ RUN apt-get -y install --no-install-recommends \
     zip \
     git \
     ruby \
+    ruby-dev \
     build-essential \
     file \
-    ssh
+    ssh \
+    wget
+
+
+# ------------------------------------------------------
+# --- Download Android Command line Tools into $ANDROID_SDK_ROOT
+
+RUN cd /opt \
+    && wget -q https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip -O android-commandline-tools.zip \
+    && mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
+    && unzip -q android-commandline-tools.zip -d /tmp/ \
+    && mv /tmp/cmdline-tools/ ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
+    && rm android-commandline-tools.zip && ls -la ${ANDROID_SDK_ROOT}/cmdline-tools/latest/
+
 
 ADD https://dl.google.com/android/repository/commandlinetools-linux-${VERSION_SDK_TOOLS}.zip /tools.zip
 RUN unzip /tools.zip -d /sdk && rm -rf /tools.zip
 
-RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
+RUN yes | sdkmanager --licenses
 
 RUN mkdir -p $HOME/.android && touch $HOME/.android/repositories.cfg
-RUN ${ANDROID_HOME}/tools/bin/sdkmanager "platform-tools" "tools" "platforms;android-${VERSION_TARGET_SDK}" "build-tools;${VERSION_BUILD_TOOLS}"
-RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
+RUN yes | sdkmanager "platform-tools" "tools" "platforms;android-${VERSION_TARGET_SDK}" "build-tools;${VERSION_BUILD_TOOLS}"
+RUN yes | sdkmanager "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository"
 
-RUN gem install fastlane --version 2.185.0 --no-document
+RUN gem install fastlane --no-document && fastlane --version
 
 ADD id_rsa $HOME/.ssh/id_rsa
 ADD id_rsa.pub $HOME/.ssh/id_rsa.pub
