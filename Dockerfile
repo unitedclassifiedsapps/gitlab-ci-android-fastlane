@@ -26,8 +26,8 @@ RUN apt-get -y install --no-install-recommends \
     unzip \
     zip \
     git \
-    ruby2.4 \
-    ruby2.4-dev \
+    ruby2.5 \
+    ruby2.5-dev \
     build-essential \
     file \
     ssh
