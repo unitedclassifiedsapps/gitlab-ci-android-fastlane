@@ -43,9 +43,4 @@ RUN ${ANDROID_HOME}/tools/bin/sdkmanager "extras;android;m2repository" "extras;g
 
 RUN gem install fastlane
 
-ADD id_rsa $HOME/.ssh/id_rsa
-ADD id_rsa.pub $HOME/.ssh/id_rsa.pub
-ADD adbkey $HOME/.android/adbkey
-ADD adbkey.pub $HOME/.android/adbkey.pub
-
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
