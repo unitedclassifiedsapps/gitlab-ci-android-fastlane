@@ -7,9 +7,9 @@ ENV LC_ALL "en_US.UTF-8"
 ENV LANGUAGE "en_US.UTF-8"
 ENV LANG "en_US.UTF-8"
 
-ENV VERSION_SDK_TOOLS "4333796"
-ENV VERSION_BUILD_TOOLS "27.0.3"
-ENV VERSION_TARGET_SDK "27"
+ENV VERSION_SDK_TOOLS "7583922"
+ENV VERSION_BUILD_TOOLS "30.0.3"
+ENV VERSION_TARGET_SDK "31"
 
 ENV ANDROID_HOME "/sdk"
 
@@ -22,7 +22,7 @@ RUN apt-add-repository ppa:brightbox/ruby-ng
 RUN apt-get update
 RUN apt-get -y install --no-install-recommends \
     curl \
-    openjdk-8-jdk \
+    openjdk-11-jdk \
     unzip \
     zip \
     git \
