@@ -34,7 +34,7 @@ RUN apt-get -qq update && \
       ruby-full
 
 RUN gem update --system     
-RUN gem install bundler fastlane --no-rdoc --no-ri
+RUN gem install bundler fastlane --no-document
 
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
